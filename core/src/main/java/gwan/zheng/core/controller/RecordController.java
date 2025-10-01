@@ -3,6 +3,8 @@ package gwan.zheng.core.controller;
 import gwan.zheng.core.model.entity.Record;
 import gwan.zheng.core.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,11 @@ public class RecordController {
     @GetMapping
     public List<Record> getAll() {
         return recordService.findAll();
+    }
+
+    @GetMapping("/page")
+    public Page<Record> getWebPage(Pageable pageable) {
+        return recordService.findWebPage(pageable);
     }
 
     @GetMapping("/{id}")

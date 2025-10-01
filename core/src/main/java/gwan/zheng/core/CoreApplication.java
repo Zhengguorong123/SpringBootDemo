@@ -1,9 +1,11 @@
 package gwan.zheng.core;
 
+import gwan.zheng.springbootcommondemo.annotation.EnableApiResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
+@EnableApiResponse
 public class CoreApplication {
 
     public static void main(String[] args) {

@@ -1,13 +1,16 @@
 package gwan.zheng.core.model.entity;
 
-import gwan.zheng.core.model.annotation.EnumValue;
-import gwan.zheng.core.model.enums.JobStatus;
-import gwan.zheng.core.model.enums.JobType;
-import jakarta.persistence.*;
+import gwan.zheng.springbootcommondemo.annotation.EnumValue;
+import gwan.zheng.springbootcommondemo.enums.JobStatus;
+import gwan.zheng.springbootcommondemo.enums.JobType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import  jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;

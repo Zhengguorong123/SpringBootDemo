@@ -2,6 +2,8 @@ package gwan.zheng.core.service;
 
 import gwan.zheng.core.model.repository.RecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import gwan.zheng.core.model.entity.Record;
@@ -18,6 +20,10 @@ public class RecordService {
 
     public List<Record> findAll(){
         return recordRepository.findAll();
+    }
+
+    public Page<Record> findWebPage(Pageable pageable){
+        return recordRepository.findAll(pageable);
     }
 
     public Record save(Record record){

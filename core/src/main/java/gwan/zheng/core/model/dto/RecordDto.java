@@ -1,6 +1,6 @@
 package gwan.zheng.core.model.dto;
 
-import gwan.zheng.core.model.enums.JobStatus;
+import gwan.zheng.springbootcommondemo.enums.JobStatus;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
