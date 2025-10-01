@@ -41,6 +41,11 @@
             <artifactId>common-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>gwan.zheng</groupId>
+            <artifactId>common-security</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
