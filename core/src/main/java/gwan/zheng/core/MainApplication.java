@@ -1,5 +1,6 @@
 package gwan.zheng.core;
 
+import gwan.zheng.annotation.EnableWebSecurityConfig;
 import gwan.zheng.springbootcommondemo.annotation.EnableApiResponse;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,11 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @SpringBootApplication
 @EnableApiResponse
-@EnableWebSecurity
-public class CoreApplication {
-
+@EnableWebSecurityConfig
+public class MainApplication {
     public static void main(String[] args) {
-        SpringApplication.run(CoreApplication.class, args);
+        SpringApplication.run(MainApplication.class, args);
     }
-
 }
