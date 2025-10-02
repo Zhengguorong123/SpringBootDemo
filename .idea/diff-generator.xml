@@ -2,6 +2,9 @@
 <project version="4">
   <component name="DiffGenerationConfig">
     <option name="snapshotDb" value="false" />
-    <option name="snapshotModelValue" value="core:core" />
+    <option name="snapshotModelValue" value="core:entityManagerFactory" />
+    <option name="sourceDbValue" value="b16b7b63-2b47-4f53-b8f0-30b6ac4e6c92" />
+    <option name="sourceModelValue" value="core:entityManagerFactory" />
+    <option name="targetDbValue" value="b16b7b63-2b47-4f53-b8f0-30b6ac4e6c92" />
   </component>
 </project>

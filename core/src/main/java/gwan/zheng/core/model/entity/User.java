@@ -1,10 +1,15 @@
 package gwan.zheng.core.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import gwan.zheng.springbootcommondemo.entity.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -20,22 +25,23 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class User extends BaseEntity {
+    @NotNull
+    @Column(nullable = false, unique = true)
+    @Size(min = 1, max = 50, message = "Account length must be between 1 and 50 characters")
     private String account;
 
-    private String name;
+    @NotNull
+    @Column(nullable = false, unique = true)
+    private String username;
 
+    @NotNull
+    @Email(message = "Email should be valid")
     private String email;
 
-    @CreatedDate
-    private LocalDateTime createTime;
+    private String passwordHash;
 
-    @LastModifiedDate
-    private LocalDateTime updateTime;
+    private String salt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

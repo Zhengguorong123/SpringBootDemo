@@ -1,0 +1,4 @@
+# Spring Boot 3.x 推荐写法
+gwan.zheng.config.TokenValidationConfig
+gwan.zheng.advice.TokenInterceptor
+gwan.zheng.service.TokenManager
