@@ -24,11 +24,11 @@ import java.time.LocalDateTime;
 public class Coin {
 
     @Id
-    private Long id;  // 主键
+    private Long id;  // 与 User 共用主键
 
     @OneToOne
     @MapsId
-    @JsonBackReference
+    @JsonBackReference("user-coin")
     @JoinColumn(name = "id")
     private User user;
 

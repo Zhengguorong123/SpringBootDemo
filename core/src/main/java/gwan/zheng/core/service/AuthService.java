@@ -1,7 +1,9 @@
 package gwan.zheng.core.service;
 
 import gwan.zheng.core.model.dto.RegisterDto;
+import gwan.zheng.core.model.entity.InviteCode;
 import gwan.zheng.core.model.entity.User;
+import gwan.zheng.core.model.repository.InviteCodeRepository;
 import gwan.zheng.core.model.repository.UserRepository;
 import gwan.zheng.core.utils.PasswordUtils;
 import gwan.zheng.core.validators.LoginDto;
@@ -11,6 +13,7 @@ import gwan.zheng.service.TokenManager;
 import gwan.zheng.springbootcommondemo.dto.ResultDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,8 +36,16 @@ public class AuthService {
 
     @Autowired
     private LoginValidator loginValidator;
+    @Autowired
+    private InviteCodeService inviteCodeService;
+    @Autowired
+    private InviteCodeRepository inviteCodeRepository;
 
-    public ResultDto<RegisterDto> register(RegisterDto registerDto) {
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+
+    public ResultDto<RegisterDto> register(RegisterDto registerDto, String inviteCode) {
         // 注册用户逻辑
 
         ResultDto<RegisterDto> validate = registerValidator.validate(registerDto);
@@ -43,11 +54,33 @@ public class AuthService {
         }
         String salt = PasswordUtils.generateSalt();
         String passwordHash = PasswordUtils.hashPassword(registerDto.getPassword(), salt);
-        User user = new User();
-        BeanUtils.copyProperties(registerDto, user);
-        user.setSalt(salt);
-        user.setPasswordHash(passwordHash);
-        userRepository.save(user);
+        User newUser = new User();
+        BeanUtils.copyProperties(registerDto, newUser);
+        newUser.setSalt(salt);
+        newUser.setPasswordHash(passwordHash);
+        ResultDto<InviteCode> inviteCodeResultDto = inviteCodeService.registerWithInvite(inviteCode, newUser);
+        if (!inviteCodeResultDto.isValid()) {
+            validate.setErrors(inviteCodeResultDto.getErrors());
+            validate.setSuccess(inviteCodeResultDto.isValid());
+            return validate;
+        }
+        try {
+            // 保存用户
+            userRepository.save(newUser);
+
+            validate.setSuccess(true);
+        } catch (Exception e) {
+            // 数据库保存失败，Redis 不会删除
+            validate.setSuccess(false);
+            validate.addError("注册失败: " + e.getMessage());
+            return validate;
+        }
+        // 保存 InviteCode 更新
+        InviteCode inviteCodeEntity = inviteCodeResultDto.getData();
+        inviteCodeRepository.save(inviteCodeEntity);
+        // 只有数据库保存成功，才删除 Redis
+        String redisKey = "invite:code:" + inviteCodeEntity.getCode();
+        redisTemplate.delete(redisKey);
         return validate;
     }
 

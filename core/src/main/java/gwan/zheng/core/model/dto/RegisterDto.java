@@ -34,4 +34,7 @@ public class RegisterDto {
 
     @NotNull
     private String confirmPassword;
+
+    @NotNull
+    private String inviteCode;
 }

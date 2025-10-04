@@ -14,6 +14,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: 郑国荣
@@ -43,15 +45,31 @@ public class User extends BaseEntity {
 
     private String salt;
 
+//    2 TODO 头像/个性签名
+//    private String profilePhotoPath;
+//    private String bio;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @JsonManagedReference("user-coin")
     private Coin coin;
 
-    // 工具方法：绑定 coin
-    public void createCoin() {
-        Coin coin = new Coin();
-        coin.setUser(this);
-        coin.setNumber(0L);
-        this.coin = coin;
+    // 该用户生成的邀请码（最多 5 个）
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference("user-owner")
+    private List<InviteCode> inviteCodes = new ArrayList<>();
+
+    // 该用户是被谁邀请的（如果有的话）
+    @OneToOne(mappedBy = "invitee")
+    @JsonManagedReference("user-invitee")
+    private InviteCode invitedBy;
+
+    @Override
+    protected void prePersist() {
+        super.prePersist();
+        if (this.coin == null) {
+            Coin coin = new Coin();
+            coin.setUser(this);   // 保证双向绑定
+            coin.setNumber(0L);
+            this.coin = coin;
+        }
     }
 }
