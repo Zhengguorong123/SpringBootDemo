@@ -53,6 +53,7 @@ public class InviteCodeService {
                 if(!redisTemplate.hasKey(INVITE_CODE_KEY + code.getCode())) {
                     // 如果 Redis 中没有该邀请码，重新存入 Redis
                     String redisKey = INVITE_CODE_KEY + code.getCode();
+                    code.setOwnerId(owner.getId());
                     redisTemplate.opsForValue().set(redisKey, toJson(code), DEFAULT_DAYS_VALID, TimeUnit.DAYS);
                 }
             } else if (!code.isUsed()) {

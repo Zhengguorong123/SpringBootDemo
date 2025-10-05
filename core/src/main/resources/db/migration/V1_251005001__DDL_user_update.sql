@@ -1,0 +1,5 @@
+ALTER TABLE user
+    MODIFY password_hash VARCHAR(255) NOT NULL;
+
+ALTER TABLE user
+    MODIFY salt VARCHAR(255) NOT NULL;

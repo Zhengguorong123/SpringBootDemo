@@ -1,8 +1,6 @@
 package gwan.zheng.core.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import gwan.zheng.springbootcommondemo.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class InviteCode extends BaseEntity {
 
     @Column(nullable = false, unique = true, length = 20)
@@ -25,12 +24,12 @@ public class InviteCode extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
-    @JsonBackReference("user-owner")
+    @JsonIgnoreProperties({"inviteCodes", "coin", "updateTime","inviteCodes"})
     private User owner;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invitee_id")
-    @JsonBackReference("user-invitee")
+    @JsonIgnoreProperties({"inviteCodes", "coin", "updateTime","inviteCodes"})
     private User invitee;
 
     // 临时字段：只给 JSON 用，不存数据库
@@ -40,6 +39,10 @@ public class InviteCode extends BaseEntity {
 
     public Long getInviteeId() {
         return invitee != null ? invitee.getId() : null;
+    }
+
+    public Long getOwnerId() {
+        return owner != null ? owner.getId() : null;
     }
 
     private boolean used = false;

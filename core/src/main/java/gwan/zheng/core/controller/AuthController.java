@@ -30,14 +30,8 @@ public class AuthController {
     private TokenManager tokenManager;
 
     @Autowired
-    private CoinRepository coinRepository;
-
-    @Autowired
     private AuthService authService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private InviteCodeService inviteCodeService;
+
 
     public AuthController(TokenManager tokenManager) {
         this.tokenManager = tokenManager;
@@ -54,8 +48,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public void logout(@RequestParam String token) {
-        tokenManager.deleteToken(token);
+    public void logout() {
+        tokenManager.deleteTokenByUserId(UserContext.getUserId());
     }
 
     @PostMapping("/register")
@@ -64,38 +58,5 @@ public class AuthController {
         return authService.register(registerDto, inviteCode);
     }
 
-    @PutMapping("/update_count")
-    public ResultDto<String> updateCount(@RequestParam Long count) {
-        Long userId = UserContext.getUserId();
-        Coin byUserId = coinRepository.findByUserId(userId);
-        if (byUserId == null) {
-            ResultDto<String> stringResultDto = new ResultDto<>();
-            stringResultDto.addError("用户不存在");
-            return stringResultDto;
-        }
-        byUserId.setNumber(count);
-        coinRepository.save(byUserId);
-        return new ResultDto<>();
-    }
 
-    @GetMapping("/get_owner_invite_codes")
-    public List<InviteCode> getOwnerInviteCodes() {
-        Long userId = UserContext.getUserId();
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            return List.of();
-        }
-        return inviteCodeService.getOwnerInviteCodes(user);
-    }
-
-    @GetMapping("/get_owner_valid_invite_codes")
-    public List<String> getOwnerValidInviteCodes() {
-        Long userId = UserContext.getUserId();
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            return List.of();
-        }
-        List<InviteCode> andRefreshOwnerValidInviteCodes = inviteCodeService.getAndRefreshOwnerValidInviteCodes(user);
-        return andRefreshOwnerValidInviteCodes.stream().map(InviteCode::getCode).toList();
-    }
 }

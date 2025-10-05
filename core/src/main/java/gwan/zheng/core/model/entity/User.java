@@ -1,6 +1,6 @@
 package gwan.zheng.core.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import gwan.zheng.springbootcommondemo.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -27,6 +27,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User extends BaseEntity {
     @NotNull
     @Column(nullable = false, unique = true)
@@ -41,25 +42,26 @@ public class User extends BaseEntity {
     @Email(message = "Email should be valid")
     private String email;
 
+    @JsonIgnore
+    @NotNull
     private String passwordHash;
 
+    @JsonIgnore
+    @NotNull
     private String salt;
 
 //    2 TODO 头像/个性签名
 //    private String profilePhotoPath;
 //    private String bio;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("user-coin")
     private Coin coin;
 
     // 该用户生成的邀请码（最多 5 个）
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference("user-owner")
     private List<InviteCode> inviteCodes = new ArrayList<>();
 
     // 该用户是被谁邀请的（如果有的话）
     @OneToOne(mappedBy = "invitee")
-    @JsonManagedReference("user-invitee")
     private InviteCode invitedBy;
 
     @Override
