@@ -60,6 +60,13 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+<!--        websocket-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-websocket</artifactId>
+
+        </dependency>
+
         <!-- 数据库 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

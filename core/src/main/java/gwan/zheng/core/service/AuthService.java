@@ -93,7 +93,10 @@ public class AuthService {
             return tokenResult;
         }
         User byUsername = userRepository.findByUsername(loginDto.getUsername());
-        return  tokenManager.createToken(byUsername.getId());
+        tokenResult = tokenManager.createToken(byUsername.getId());
+        tokenResult.setExtra(String.valueOf(byUsername.getId()));
+        return tokenResult;
+
     }
 
 }
